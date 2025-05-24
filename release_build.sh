@@ -48,7 +48,7 @@ if [ $? -eq 0 ]; then
     echo "1. Test the app in ./release/TextToSpeechApp.app"
     echo "2. Create a GitHub release with tag v1.2.0"
     echo "3. Upload the zip file as a release asset"
-    echo "4. Use the content from RELEASE_NOTES_v1.2.0.md as release description"
+    echo "4. Use the content from RELEASE_NOTES_v1_2_0.md as release description"
     
 else
     echo "❌ Build failed!"
@@ -59,6 +59,6 @@ echo ""
 echo "🔗 GitHub Release Checklist:"
 echo "□ Create release with tag: v1.2.0"
 echo "□ Upload: TextToSpeechApp-v1.2.0-macOS.zip"
-echo "□ Copy release notes from: RELEASE_NOTES_v1.2.0.md"
+echo "□ Copy release notes from: RELEASE_NOTES_v1_2_0.md"
 echo "□ Mark as latest release"
 echo "□ Add screenshots to release description"

@@ -1,0 +1,62 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Select Xcode version
+      run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+    
+    - name: Show Xcode version
+      run: xcodebuild -version
+    
+    - name: Build Debug
+      run: |
+        xcodebuild -project TextToSpeechApp.xcodeproj \
+                   -scheme TextToSpeechApp \
+                   -configuration Debug \
+                   -destination "platform=macOS" \
+                   build
+    
+    - name: Build Release
+      run: |
+        xcodebuild -project TextToSpeechApp.xcodeproj \
+                   -scheme TextToSpeechApp \
+                   -configuration Release \
+                   -destination "platform=macOS" \
+                   build
+    
+    - name: Archive Release Build
+      if: github.ref == 'refs/heads/main'
+      run: |
+        xcodebuild -project TextToSpeechApp.xcodeproj \
+                   -scheme TextToSpeechApp \
+                   -configuration Release \
+                   -destination "platform=macOS" \
+                   -archivePath ./TextToSpeechApp.xcarchive \
+                   archive
+    
+    - name: Export Archive
+      if: github.ref == 'refs/heads/main'
+      run: |
+        xcodebuild -exportArchive \
+                   -archivePath ./TextToSpeechApp.xcarchive \
+                   -exportPath ./export \
+                   -exportOptionsPlist .github/workflows/ExportOptions.plist
+    
+    - name: Upload Build Artifacts
+      if: github.ref == 'refs/heads/main'
+      uses: actions/upload-artifact@v4
+      with:
+        name: TextToSpeechApp-${{ github.sha }}
+        path: export/
+        retention-days: 30

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2025-01-24
 
+### Fixed
+- **Build Issues**: Added missing AppKit import for NSWorkspace functionality
+  - Resolves compilation errors when using NSWorkspace.shared.open()
+  - Ensures GitHub contribution button works correctly
+  - Fixes build failures on clean environments
+
 ### Added
 - **Contribute on GitHub Button**: Added a prominent "Contribute on GitHub" button in the main interface header
   - Clickable heart icon with "Contribute on GitHub" text

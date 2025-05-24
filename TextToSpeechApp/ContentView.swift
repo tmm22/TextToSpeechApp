@@ -20,204 +20,29 @@ struct ContentView: View {
     @State private var showingSettings = false
     @State private var showingVoiceControls = false
     @State private var showingEmotionTester = false
+    @State private var showingQuickActions = false
     
     @State private var cancellables = Set<AnyCancellable>()
     
     var body: some View {
-        VStack(spacing: 20) {
-            // Header
-            HStack {
-                Text("Text-to-Speech")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                // Minimal Header with floating controls
+                headerView
                 
-                Spacer()
+                // Main content area
+                mainContentView
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                HStack {
-                    Button(action: {
-                        if let url = URL(string: "https://github.com/tmm22/TextToSpeechApp") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }) {
-                        HStack {
-                            Image(systemName: "heart.fill")
-                            Text("Contribute on GitHub")
-                        }
-                    }
-                    .buttonStyle(.borderless)
-                    .foregroundColor(.blue)
-                    .help("Contribute to this project on GitHub")
-                    
-                    Button("Voice Controls") {
-                        showingVoiceControls = true
-                    }
-                    .buttonStyle(.borderless)
-                    
-                    Button("Emotion Tester") {
-                        showingEmotionTester = true
-                    }
-                    .buttonStyle(.borderless)
-                    .help("Test all voice emotions automatically")
-                    
-                    Button("Settings") {
-                        showingSettings = true
-                    }
-                    .buttonStyle(.borderless)
+                // Floating bottom controls
+                if audioPlayer.duration > 0 || isGenerating {
+                    bottomControlsView
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
-            
-            // Provider Selection
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Voice Provider")
-                    .font(.headline)
-                
-                Picker("Provider", selection: $selectedProvider) {
-                    ForEach(TTSProvider.allCases, id: \.self) { provider in
-                        Text(provider.displayName).tag(provider)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .onChange(of: selectedProvider) { _ in
-                    updateAvailableVoices()
-                }
-            }
-            
-            // Voice Selection
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Voice")
-                    .font(.headline)
-                
-                if availableVoices.isEmpty {
-                    Text("No voices available for \(selectedProvider.displayName)")
-                        .foregroundColor(.secondary)
-                        .italic()
-                } else {
-                    Picker("Voice", selection: $selectedVoice) {
-                        Text("Select a voice").tag(nil as Voice?)
-                        ForEach(availableVoices, id: \.id) { voice in
-                            Text(voice.name).tag(voice as Voice?)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                }
-                
-                if selectedProvider == .elevenLabs && !apiKeyManager.hasElevenLabsKey {
-                    HStack {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                            .foregroundColor(.orange)
-                        Text("ElevenLabs API key required")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                
-                if selectedProvider == .openAI && !apiKeyManager.hasOpenAIKey {
-                    HStack {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                            .foregroundColor(.orange)
-                        Text("OpenAI API key required")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-            }
-            
-            // Text Input
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Text to Speak")
-                    .font(.headline)
-                
-                TextEditor(text: $inputText)
-                    .font(.body)
-                    .frame(minHeight: 120)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(themeManager.currentTheme == .dark ? Color.gray.opacity(0.5) : Color.gray.opacity(0.3), lineWidth: 1)
-                    )
-                    .cornerRadius(8)
-                    .background(themeManager.currentTheme == .dark ? Color(.darkGray).opacity(0.3) : Color(.white))
-            }
-            
-            // Controls
-            HStack(spacing: 16) {
-                Button("Generate Speech") {
-                    generateSpeech()
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(isGenerating || inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || selectedVoice == nil || !hasRequiredAPIKey)
-                
-                if audioPlayer.isPlaying {
-                    Button("Pause") {
-                        audioPlayer.pause()
-                    }
-                    .buttonStyle(.bordered)
-                } else if audioPlayer.duration > 0 {
-                    Button("Play") {
-                        audioPlayer.resume()
-                    }
-                    .buttonStyle(.bordered)
-                }
-                
-                if audioPlayer.duration > 0 {
-                    Button("Stop") {
-                        audioPlayer.stop()
-                    }
-                    .buttonStyle(.bordered)
-                }
-                
-                Spacer()
-                
-                if isGenerating {
-                    ProgressView()
-                        .scaleEffect(0.8)
-                }
-            }
-            
-            // Audio Progress
-            if audioPlayer.duration > 0 {
-                VStack(spacing: 8) {
-                    HStack {
-                        Text(formatTime(audioPlayer.playbackProgress))
-                            .font(.caption)
-                            .monospacedDigit()
-                        
-                        Spacer()
-                        
-                        Text(formatTime(audioPlayer.duration))
-                            .font(.caption)
-                            .monospacedDigit()
-                    }
-                    
-                    Slider(
-                        value: Binding(
-                            get: { audioPlayer.playbackProgress },
-                            set: { audioPlayer.seek(to: $0) }
-                        ),
-                        in: 0...audioPlayer.duration
-                    )
-                }
-            }
-            
-            // Error Display
-            if let errorMessage = errorMessage ?? audioPlayer.errorMessage {
-                HStack {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundColor(.red)
-                    Text(errorMessage)
-                        .font(.caption)
-                        .foregroundColor(.red)
-                }
-                .padding(8)
-                .background(themeManager.currentTheme == .dark ? Color.red.opacity(0.2) : Color.red.opacity(0.1))
-                .cornerRadius(8)
-            }
-            
-            Spacer()
         }
-        .padding(20)
-        .frame(minWidth: 500, minHeight: 600)
-        .background(themeManager.currentTheme == .dark ? Color(.darkGray).opacity(0.2) : Color(.white))
-        .foregroundColor(themeManager.currentTheme == .dark ? .white : .primary)
+        .background(backgroundGradient)
+        .preferredColorScheme(themeManager.preferredColorScheme)
         .onAppear {
             setupTTSService()
             updateAvailableVoices()
@@ -243,6 +68,354 @@ struct ContentView: View {
         }
     }
     
+    // MARK: - Header View
+    private var headerView: some View {
+        HStack {
+            // App title - minimal
+            Text("TTS")
+                .font(.system(size: 24, weight: .light, design: .rounded))
+                .foregroundColor(.primary.opacity(0.8))
+            
+            Spacer()
+            
+            // Quick action button
+            Button(action: { showingQuickActions.toggle() }) {
+                Image(systemName: "ellipsis.circle")
+                    .font(.title2)
+                    .foregroundColor(.primary.opacity(0.6))
+            }
+            .buttonStyle(.plain)
+            .popover(isPresented: $showingQuickActions, arrowEdge: .top) {
+                quickActionsMenu
+            }
+        }
+        .padding(.horizontal, 24)
+        .padding(.vertical, 16)
+        .background(.ultraThinMaterial, in: Rectangle())
+    }
+    
+    // MARK: - Quick Actions Menu
+    private var quickActionsMenu: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            quickActionButton("Voice Controls", systemImage: "waveform.circle") {
+                showingVoiceControls = true
+                showingQuickActions = false
+            }
+            
+            quickActionButton("Emotion Tester", systemImage: "theatermasks") {
+                showingEmotionTester = true
+                showingQuickActions = false
+            }
+            
+            quickActionButton("Settings", systemImage: "gear") {
+                showingSettings = true
+                showingQuickActions = false
+            }
+            
+            Divider()
+            
+            quickActionButton("GitHub", systemImage: "heart.fill") {
+                if let url = URL(string: "https://github.com/tmm22/TextToSpeechApp") {
+                    NSWorkspace.shared.open(url)
+                }
+                showingQuickActions = false
+            }
+        }
+        .padding(16)
+        .frame(width: 180)
+    }
+    
+    private func quickActionButton(_ title: String, systemImage: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                Image(systemName: systemImage)
+                    .frame(width: 16)
+                Text(title)
+                    .font(.system(size: 14, weight: .medium))
+                Spacer()
+            }
+            .foregroundColor(.primary)
+        }
+        .buttonStyle(.plain)
+        .padding(.vertical, 4)
+    }
+    
+    // MARK: - Main Content View
+    private var mainContentView: some View {
+        VStack(spacing: 32) {
+            Spacer()
+            
+            // Provider selection - minimal pills
+            providerSelectionView
+            
+            // Voice selection - streamlined
+            voiceSelectionView
+            
+            // Text input - clean and focused
+            textInputView
+            
+            // Generate button - prominent
+            generateButtonView
+            
+            // Error display - subtle
+            if let errorMessage = errorMessage ?? audioPlayer.errorMessage {
+                errorView(errorMessage)
+            }
+            
+            Spacer()
+        }
+        .padding(.horizontal, 32)
+    }
+    
+    // MARK: - Provider Selection
+    private var providerSelectionView: some View {
+        HStack(spacing: 16) {
+            ForEach(TTSProvider.allCases, id: \.self) { provider in
+                Button(action: { 
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        selectedProvider = provider
+                    }
+                }) {
+                    Text(provider.displayName)
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(selectedProvider == provider ? .white : .primary.opacity(0.7))
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(
+                            Capsule()
+                                .fill(selectedProvider == provider ? 
+                                      Color.accentColor : 
+                                      Color.primary.opacity(0.1))
+                        )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+    
+    // MARK: - Voice Selection
+    private var voiceSelectionView: some View {
+        VStack(spacing: 8) {
+            if !availableVoices.isEmpty {
+                Menu {
+                    ForEach(availableVoices, id: \.id) { voice in
+                        Button(voice.name) {
+                            selectedVoice = voice
+                        }
+                    }
+                } label: {
+                    HStack {
+                        Text(selectedVoice?.name ?? "Select Voice")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.primary.opacity(0.8))
+                        
+                        Spacer()
+                        
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.primary.opacity(0.5))
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                }
+                .buttonStyle(.plain)
+            }
+            
+            // API key warning - subtle
+            if !hasRequiredAPIKey {
+                HStack(spacing: 8) {
+                    Image(systemName: "key.fill")
+                        .font(.system(size: 12))
+                    Text("\(selectedProvider.displayName) API key required")
+                        .font(.system(size: 12, weight: .medium))
+                }
+                .foregroundColor(.orange.opacity(0.8))
+                .padding(.top, 4)
+            }
+        }
+    }
+    
+    // MARK: - Text Input
+    private var textInputView: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            TextEditor(text: $inputText)
+                .font(.system(size: 16, weight: .regular))
+                .scrollContentBackground(.hidden)
+                .padding(16)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
+                .frame(minHeight: 120, maxHeight: 200)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(.primary.opacity(0.1), lineWidth: 1)
+                )
+                .overlay(
+                    // Placeholder text
+                    Group {
+                        if inputText.isEmpty {
+                            VStack {
+                                HStack {
+                                    Text("Enter text to speak...")
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.primary.opacity(0.4))
+                                        .padding(.leading, 20)
+                                        .padding(.top, 20)
+                                    Spacer()
+                                }
+                                Spacer()
+                            }
+                        }
+                    }
+                )
+        }
+    }
+    
+    // MARK: - Generate Button
+    private var generateButtonView: some View {
+        Button(action: generateSpeech) {
+            HStack(spacing: 12) {
+                if isGenerating {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                } else {
+                    Image(systemName: "play.fill")
+                        .font(.system(size: 16, weight: .semibold))
+                }
+                
+                Text(isGenerating ? "Generating..." : "Generate Speech")
+                    .font(.system(size: 16, weight: .semibold))
+            }
+            .foregroundColor(.white)
+            .padding(.horizontal, 32)
+            .padding(.vertical, 16)
+            .background(
+                RoundedRectangle(cornerRadius: 25)
+                    .fill(
+                        canGenerate ? 
+                        Color.accentColor : 
+                        Color.primary.opacity(0.3)
+                    )
+            )
+        }
+        .buttonStyle(.plain)
+        .disabled(!canGenerate)
+        .scaleEffect(canGenerate ? 1.0 : 0.95)
+        .animation(.easeInOut(duration: 0.2), value: canGenerate)
+    }
+    
+    // MARK: - Bottom Controls
+    private var bottomControlsView: some View {
+        VStack(spacing: 16) {
+            // Audio progress
+            if audioPlayer.duration > 0 {
+                audioProgressView
+            }
+            
+            // Playback controls
+            playbackControlsView
+        }
+        .padding(.horizontal, 24)
+        .padding(.vertical, 16)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
+        .padding(.horizontal, 16)
+        .padding(.bottom, 16)
+    }
+    
+    // MARK: - Audio Progress
+    private var audioProgressView: some View {
+        VStack(spacing: 8) {
+            HStack {
+                Text(formatTime(audioPlayer.playbackProgress))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
+                    .foregroundColor(.primary.opacity(0.6))
+                
+                Spacer()
+                
+                Text(formatTime(audioPlayer.duration))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
+                    .foregroundColor(.primary.opacity(0.6))
+            }
+            
+            Slider(
+                value: Binding(
+                    get: { audioPlayer.playbackProgress },
+                    set: { audioPlayer.seek(to: $0) }
+                ),
+                in: 0...audioPlayer.duration
+            )
+            .tint(.accentColor)
+        }
+    }
+    
+    // MARK: - Playback Controls
+    private var playbackControlsView: some View {
+        HStack(spacing: 20) {
+            if audioPlayer.isPlaying {
+                controlButton("pause.fill") {
+                    audioPlayer.pause()
+                }
+            } else if audioPlayer.duration > 0 {
+                controlButton("play.fill") {
+                    audioPlayer.resume()
+                }
+            }
+            
+            if audioPlayer.duration > 0 {
+                controlButton("stop.fill") {
+                    audioPlayer.stop()
+                }
+            }
+        }
+    }
+    
+    private func controlButton(_ systemImage: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: systemImage)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundColor(.primary.opacity(0.8))
+                .frame(width: 44, height: 44)
+                .background(.ultraThinMaterial, in: Circle())
+        }
+        .buttonStyle(.plain)
+    }
+    
+    // MARK: - Error View
+    private func errorView(_ message: String) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.system(size: 14))
+                .foregroundColor(.orange)
+            
+            Text(message)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundColor(.primary.opacity(0.8))
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 12))
+    }
+    
+    // MARK: - Background
+    private var backgroundGradient: some View {
+        LinearGradient(
+            colors: themeManager.currentTheme == .dark ? 
+                [Color.black, Color.gray.opacity(0.1)] :
+                [Color.white, Color.blue.opacity(0.05)],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .ignoresSafeArea()
+    }
+    
+    // MARK: - Computed Properties
+    private var canGenerate: Bool {
+        !isGenerating && 
+        !inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && 
+        selectedVoice != nil && 
+        hasRequiredAPIKey
+    }
+    
     private var hasRequiredAPIKey: Bool {
         switch selectedProvider {
         case .elevenLabs:
@@ -252,6 +425,7 @@ struct ContentView: View {
         }
     }
     
+    // MARK: - Methods
     private func setupTTSService() {
         ttsService = TTSService(apiKeyManager: apiKeyManager)
     }
@@ -259,7 +433,6 @@ struct ContentView: View {
     private func updateAvailableVoices() {
         guard let service = ttsService else { return }
         
-        // Get OpenAI voices (always available)
         let openAIVoices = OpenAIVoice.allCases.map { voice in
             Voice(id: voice.rawValue, name: voice.displayName, provider: .openAI)
         }
@@ -274,7 +447,6 @@ struct ContentView: View {
         case .elevenLabs:
             if apiKeyManager.hasElevenLabsKey {
                 service.loadElevenLabsVoices()
-                // The voices will be updated through the service's published property
                 availableVoices = service.availableVoices.filter { $0.provider == .elevenLabs }
                 selectedVoice = availableVoices.first
             } else {
@@ -321,7 +493,6 @@ struct ContentView: View {
     }
     
     private func setupShortcutObservers() {
-        // Observe shortcut manager changes
         shortcutManager.$shouldCopyFromClipboard
             .sink { shouldCopy in
                 if shouldCopy {
@@ -371,7 +542,6 @@ struct ContentView: View {
     private func handleCopyAndSpeak() {
         if let clipboardText = shortcutManager.getClipboardText() {
             inputText = clipboardText
-            // Small delay to ensure the text is set before generating speech
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 if !self.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     self.generateSpeech()
@@ -383,4 +553,6 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environmentObject(ThemeManager())
+        .environmentObject(ShortcutManager())
 }

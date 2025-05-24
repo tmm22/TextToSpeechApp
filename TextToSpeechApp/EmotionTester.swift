@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 import Foundation
+import AppKit
 
 class EmotionTester: ObservableObject {
     @Published var isRunning = false

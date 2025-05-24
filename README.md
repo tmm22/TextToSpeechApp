@@ -1,198 +1,218 @@
-# Text-to-Speech App
+# TextToSpeechApp - Modern & Streamlined
 
-A powerful macOS Text-to-Speech application with advanced voice controls, supporting both OpenAI and ElevenLabs TTS APIs.
+A beautifully designed, modern Text-to-Speech application for macOS with voice controls, emotion testing, and keyboard shortcuts. Built with SwiftUI and focused on simplicity and user experience.
 
-## Features
+## ✨ Features
 
-### 🎙️ Multiple TTS Providers
-- **OpenAI TTS**: High-quality speech synthesis with 6 built-in voices
-- **ElevenLabs**: Premium AI voice synthesis with custom voices and emotions
+### 🎯 **Modern, Streamlined Interface**
+- **Minimal Design**: Clean, focused UI with reduced visual clutter
+- **Floating Controls**: Context-aware controls that appear when needed
+- **Glass Morphism**: Ultra-thin material backgrounds for modern aesthetics
+- **Smooth Animations**: Fluid transitions and micro-interactions
+- **Responsive Layout**: Adapts beautifully to different window sizes
 
-### 🎛️ Advanced Voice Controls
-- **Speed Control**: Adjust synthesis speed (0.25x to 4.0x for OpenAI, 0.5x to 2.0x for ElevenLabs)
-- **Pitch Control**: Modify voice pitch (0.5x to 2.0x)
-- **Volume Control**: Real-time volume adjustment (0% to 100%)
-- **Playback Speed**: Independent playback speed control (0.5x to 2.0x)
+### 🎤 **Voice Providers**
+- **OpenAI TTS**: High-quality voices with speed control
+- **ElevenLabs**: Premium AI voices with emotion control
+- **Easy Switching**: Simple pill-style provider selection
 
-### 😊 Voice Emotion Control
-Support for 8 different emotional voice styles:
-- **Neutral**: Standard, natural voice
-- **Happy**: Upbeat and cheerful tone
-- **Sad**: Melancholic and subdued
-- **Excited**: Energetic and enthusiastic
-- **Calm**: Peaceful and relaxed
-- **Angry**: Intense and forceful
-- **Whisper**: Soft and intimate
-- **Dramatic**: Theatrical and expressive
+### 🎭 **Emotion System**
+- **8 Emotion Presets**: Neutral, Happy, Sad, Excited, Calm, Angry, Whisper, Dramatic
+- **Automatic Testing**: Test all emotions with one click
+- **Parameter Visualization**: See stability, similarity boost, and style settings
+- **Audio Export**: Save emotion test results as MP3 files
 
-*Note: Full emotion control is available with ElevenLabs. OpenAI voices use simulated emotion adjustments.*
+### ⌨️ **Keyboard Shortcuts**
+- **⌘+V**: Copy text from clipboard
+- **⌘+Return**: Generate speech from current text
+- **⌘+Shift+V**: Copy from clipboard and speak immediately
+- **Global Shortcuts**: Work from any application
 
-### 🎵 Audio Playback Features
-- **Play/Pause/Stop**: Full playback control
-- **Progress Tracking**: Visual progress bar with time display
-- **Seek Control**: Click to jump to any position in the audio
-- **Real-time Audio Processing**: Apply volume and speed changes during playback
+### 🎛️ **Voice Controls**
+- **Speed Control**: 0.25x to 4.0x playback speed
+- **Pitch Adjustment**: Fine-tune voice pitch
+- **Volume Control**: Precise audio level control
+- **Real-time Preview**: Hear changes instantly
 
-### ⚙️ User-Friendly Interface
-- **Voice Controls Panel**: Dedicated interface for all audio settings
-- **Provider Selection**: Easy switching between OpenAI and ElevenLabs
-- **Voice Selection**: Browse and select from available voices
-- **Settings Management**: Secure API key storage
-- **Reset to Defaults**: Quick reset for all voice controls
-- **GitHub Integration**: One-click access to contribute to the project
-- **Dark Mode Support**: Full dark mode interface with theme selection options (light, dark, system) - dark mode is the default theme
+### 🌙 **Theme System**
+- **Dark Mode**: Beautiful dark theme (default)
+- **Light Mode**: Clean light theme
+- **System Sync**: Automatically follows system preferences
+- **Gradient Backgrounds**: Subtle gradients enhance the visual experience
 
-### 🤝 Community Features
-- **Contribute on GitHub**: Prominent button in the main interface for easy access to the project repository
-- **Open Source**: Full source code available for community contributions and improvements
+## 🚀 Quick Start
 
-## Installation
+1. **Launch the App**: Double-click TextToSpeechApp.app
+2. **Set API Keys**: Click the menu (•••) → Settings → Add your API keys
+3. **Select Provider**: Choose OpenAI or ElevenLabs
+4. **Pick a Voice**: Select from available voices
+5. **Enter Text**: Type or paste text in the input area
+6. **Generate**: Click "Generate Speech" or press ⌘+Return
 
-1. Clone this repository: `git clone https://github.com/tmm22/TextToSpeechApp.git`
-2. Open `TextToSpeechApp.xcodeproj` in Xcode
-3. Build and run the application
+## 🎮 Interface Guide
 
-You can also click the "Contribute on GitHub" button in the app to visit the repository directly.
+### Main Interface
+```
+┌─────────────────────────────────────┐
+│ TTS                            •••  │ ← Minimal header with menu
+├─────────────────────────────────────┤
+│                                     │
+│     [OpenAI] [ElevenLabs]          │ ← Provider pills
+│                                     │
+│     [Select Voice ▼]               │ ← Voice dropdown
+│                                     │
+│     ┌─────────────────────────────┐ │
+│     │ Enter text to speak...      │ │ ← Text input area
+│     │                             │ │
+│     └─────────────────────────────┘ │
+│                                     │
+│        [Generate Speech]            │ ← Main action button
+│                                     │
+└─────────────────────────────────────┘
+```
 
-## Setup
+### Quick Actions Menu (•••)
+- **Voice Controls**: Adjust speed, pitch, volume, emotion
+- **Emotion Tester**: Test all voice emotions automatically
+- **Settings**: Configure API keys and preferences
+- **GitHub**: Contribute to the project
 
-### API Keys
-You'll need API keys from one or both providers:
+### Audio Controls (appears when playing)
+```
+┌─────────────────────────────────────┐
+│ 0:15 ████████░░░░░░░░░░░░░░░ 1:23   │ ← Progress bar
+│                                     │
+│        ⏸️  ⏹️                       │ ← Playback controls
+└─────────────────────────────────────┘
+```
 
-#### OpenAI Setup
+## 🔧 Advanced Features
+
+### Emotion Testing
+1. Open Quick Actions → Emotion Tester
+2. Select provider and voice
+3. Click "Run Emotion Tests"
+4. Listen to each emotion automatically
+5. Export results or view detailed logs
+
+### Voice Controls
+1. Open Quick Actions → Voice Controls
+2. Adjust sliders for speed, pitch, volume
+3. Select emotion preset
+4. Changes apply to next generation
+
+### Keyboard Shortcuts
+- All shortcuts work globally (from any app)
+- Shortcuts are customizable in Settings
+- Visual feedback shows when shortcuts are triggered
+
+## 🛠️ Technical Details
+
+### Architecture
+- **SwiftUI**: Modern declarative UI framework
+- **Combine**: Reactive programming for data flow
+- **URLSession**: Network requests for TTS APIs
+- **AVFoundation**: Audio playback and control
+
+### Performance
+- **Lazy Loading**: UI elements load on demand
+- **Memory Efficient**: Optimized for low memory usage
+- **Background Processing**: Network requests don't block UI
+- **Caching**: Smart caching of voice lists and settings
+
+### Security
+- **Sandboxed**: App runs in secure sandbox environment
+- **Keychain Storage**: API keys stored securely
+- **Network Permissions**: Only required network access
+- **No Data Collection**: Your text never leaves your device (except to TTS APIs)
+
+## 🎨 Design Philosophy
+
+### Simplicity First
+- **Minimal UI**: Only essential elements visible
+- **Progressive Disclosure**: Advanced features hidden until needed
+- **Clear Hierarchy**: Visual hierarchy guides user attention
+- **Consistent Patterns**: Similar actions work the same way
+
+### Modern Aesthetics
+- **Glass Morphism**: Translucent materials create depth
+- **Rounded Corners**: Soft, friendly interface elements
+- **Subtle Shadows**: Depth without distraction
+- **Smooth Animations**: 60fps transitions throughout
+
+### Accessibility
+- **High Contrast**: Clear visual distinction between elements
+- **Large Touch Targets**: Easy to click/tap interface elements
+- **Keyboard Navigation**: Full keyboard accessibility
+- **Screen Reader Support**: VoiceOver compatible
+
+## 🔑 API Setup
+
+### OpenAI Setup
 1. Visit [OpenAI Platform](https://platform.openai.com)
-2. Create an account and get your API key
-3. In the app, go to Settings and enter your OpenAI API key
+2. Create account and generate API key
+3. Add key in Settings → OpenAI API Key
+4. Supports voices: Alloy, Echo, Fable, Onyx, Nova, Shimmer
 
-#### ElevenLabs Setup
+### ElevenLabs Setup
 1. Visit [ElevenLabs](https://elevenlabs.io)
-2. Create an account and get your API key
-3. In the app, go to Settings and enter your ElevenLabs API key
+2. Create account and get API key
+3. Add key in Settings → ElevenLabs API Key
+4. Access to premium AI voices with emotion control
 
-## Usage
+## 🚀 Contributing
 
-### Basic Text-to-Speech
-1. Select your preferred TTS provider (OpenAI or ElevenLabs)
-2. Choose a voice from the dropdown
-3. Enter your text in the text editor
-4. Click "Generate Speech" to create audio
-5. Use playback controls to play, pause, or stop
+We welcome contributions! Here's how to get involved:
 
-### Advanced Voice Controls
-1. Click "Voice Controls" to open the controls panel
-2. Adjust the following parameters:
-   - **Speed**: Control how fast the text is spoken
-   - **Pitch**: Adjust the voice pitch (higher/lower)
-   - **Volume**: Set the audio volume level
-   - **Playback Speed**: Control playback speed independently from synthesis speed
-   - **Emotion**: Select from 8 emotional voice styles
-
-### Voice Emotion Guide
-
-| Emotion | Best Use Cases | ElevenLabs Settings |
-|---------|---------------|-------------------|
-| Neutral | General content, news, documentation | Balanced stability and similarity |
-| Happy | Advertisements, children's content, celebrations | High similarity, moderate style |
-| Sad | Dramatic readings, somber content | High stability, low similarity |
-| Excited | Sports commentary, product launches | Low stability, high similarity, speaker boost |
-| Calm | Meditation, relaxation, tutorials | Very high stability, low similarity |
-| Angry | Dramatic performances, intense scenes | Moderate stability and similarity, style boost |
-| Whisper | ASMR, intimate content, secrets | Very high stability, very low similarity |
-| Dramatic | Theater, storytelling, presentations | Low stability, high style and similarity |
-
-## Technical Features
-
-### Audio Processing
-- **AVAudioPlayer**: Native macOS audio playback
-- **Real-time Controls**: Volume and speed adjustments during playback
-- **Progress Tracking**: Accurate time-based progress indication
-
-### Voice Synthesis
-- **OpenAI Integration**: Uses the latest TTS-1 model with speed control
-- **ElevenLabs Integration**: Advanced voice settings with emotion parameters
-- **Quality Settings**: Optimized for clarity and naturalness
-
-### Data Management
-- **Secure Storage**: API keys stored in macOS Keychain
-- **User Preferences**: Voice control settings persistence
-- **Error Handling**: Comprehensive error reporting and recovery
-
-## System Requirements
-
-- macOS 13.0 or later
-- Xcode 15.0 or later (for building)
-- Internet connection (for TTS API calls)
-
-## File Structure
-
-```
-TextToSpeechApp/
-├── TextToSpeechApp.swift          # Main app entry point
-├── ContentView.swift              # Main user interface
-├── VoiceControlsView.swift        # Advanced voice controls panel
-├── VoiceProvider.swift            # TTS provider models and voice controls
-├── TTSService.swift               # TTS API integration
-├── AudioPlayer.swift             # Audio playback with controls
-├── SettingsView.swift             # API key configuration
-└── TextToSpeechApp.entitlements   # App permissions
+### Development Setup
+```bash
+git clone https://github.com/tmm22/TextToSpeechApp.git
+cd TextToSpeechApp
+open TextToSpeechApp.xcodeproj
 ```
 
-## API Usage Notes
+### Areas for Contribution
+- **New Voice Providers**: Add support for more TTS services
+- **UI Improvements**: Enhance the interface design
+- **Performance**: Optimize for better performance
+- **Features**: Add new functionality
+- **Documentation**: Improve guides and documentation
 
-### OpenAI TTS
-- **Model**: TTS-1 (standard quality)
-- **Voices**: alloy, echo, fable, onyx, nova, shimmer
-- **Speed Range**: 0.25x to 4.0x
-- **Pricing**: Pay per character generated
+### Code Style
+- Follow Swift conventions
+- Use SwiftUI best practices
+- Comment complex logic
+- Write descriptive commit messages
 
-### ElevenLabs
-- **Model**: eleven_monolingual_v1
-- **Voices**: Custom and premium voices available
-- **Speed Range**: 0.5x to 2.0x (via voice settings)
-- **Emotion Support**: Full emotional voice control
-- **Pricing**: Character-based with monthly limits
+## 📝 Changelog
 
-## Troubleshooting
+### v2.0.0 - Modern UI Overhaul
+- ✨ Complete UI redesign with modern aesthetics
+- 🎯 Streamlined interface with floating controls
+- 🎨 Glass morphism design language
+- ⚡ Improved performance and responsiveness
+- 🎭 Enhanced emotion testing system
+- ⌨️ Better keyboard shortcuts integration
 
-### Common Issues
+### v1.0.0 - Initial Release
+- 🎤 OpenAI and ElevenLabs TTS support
+- 🎛️ Voice controls and emotion presets
+- ⌨️ Keyboard shortcuts
+- 🌙 Dark/Light theme support
 
-**"API key required" message**
-- Ensure you've entered valid API keys in Settings
-- Check that your API keys have sufficient credits/quota
+## 📄 License
 
-**No voices available**
-- Verify internet connection
-- Check API key validity
-- For ElevenLabs: Ensure your account has access to voices
+MIT License - see [LICENSE](LICENSE) for details.
 
-**Audio not playing**
-- Check system volume settings
-- Verify app volume control isn't set to 0%
-- Ensure no other apps are blocking audio
+## 🙏 Acknowledgments
 
-**Generation takes too long**
-- Large text blocks take more time to process
-- ElevenLabs may have longer processing times for emotional voices
-- Check your internet connection speed
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## License
-
-This project is available under the MIT License. See LICENSE file for details.
-
-## Credits
-
-- Built with SwiftUI and AVFoundation
-- Powered by OpenAI TTS and ElevenLabs APIs
-- Voice emotion presets optimized for natural speech patterns
+- **OpenAI** for excellent TTS API
+- **ElevenLabs** for premium AI voices
+- **Apple** for SwiftUI framework
+- **Contributors** who help improve the app
 
 ---
 
-*Enjoy creating natural, expressive speech with advanced voice controls!*
+**Made with ❤️ for the macOS community**
+
+*Simplicity is the ultimate sophistication.*

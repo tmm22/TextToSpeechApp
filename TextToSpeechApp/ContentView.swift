@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import AppKit
 
 struct ContentView: View {
     @StateObject private var apiKeyManager = APIKeyManager()

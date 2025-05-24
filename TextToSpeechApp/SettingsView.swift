@@ -3,8 +3,16 @@ import SwiftUI
 struct SettingsView: View {
     @StateObject private var apiKeyManager = APIKeyManager()
     @EnvironmentObject var themeManager: ThemeManager
+    @EnvironmentObject var updateChecker: UpdateChecker
     @State private var showingElevenLabsKey = false
     @State private var showingOpenAIKey = false
+    
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter
+    }
     
     var body: some View {
         ScrollView {
@@ -100,6 +108,84 @@ struct SettingsView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
+                    }
+                }
+                
+                Divider()
+                
+                // Update Settings
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Updates")
+                        .font(.headline)
+                    
+                    Toggle("Check for updates automatically", isOn: $updateChecker.automaticUpdateChecksEnabled)
+                    
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Current Version: \(updateChecker.currentVersionString)")
+                                .font(.system(size: 14, weight: .medium))
+                            
+                            if let lastCheck = updateChecker.lastCheckDate {
+                                Text("Last checked: \(lastCheck, formatter: dateFormatter)")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            // Update status
+                            switch updateChecker.updateStatus {
+                            case .checking:
+                                HStack(spacing: 6) {
+                                    ProgressView()
+                                        .scaleEffect(0.7)
+                                    Text("Checking for updates...")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            case .upToDate:
+                                HStack(spacing: 6) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(.green)
+                                        .font(.caption)
+                                    Text("You're up to date")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            case .updateAvailable(let release):
+                                HStack(spacing: 6) {
+                                    Image(systemName: "arrow.down.circle.fill")
+                                        .foregroundColor(.blue)
+                                        .font(.caption)
+                                    Text("Update available: \(release.tagName)")
+                                        .font(.caption)
+                                        .foregroundColor(.blue)
+                                }
+                            case .error(let message):
+                                HStack(spacing: 6) {
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .foregroundColor(.orange)
+                                        .font(.caption)
+                                    Text("Error: \(message)")
+                                        .font(.caption)
+                                        .foregroundColor(.orange)
+                                }
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        Button("Check Now") {
+                            updateChecker.checkForUpdates()
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(updateChecker.isCheckingForUpdates)
+                    }
+                    
+                    if case .updateAvailable(let release) = updateChecker.updateStatus {
+                        Button("View Release") {
+                            updateChecker.openReleaseURL(release)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.small)
                     }
                 }
                 

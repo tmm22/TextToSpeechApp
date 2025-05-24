@@ -4,12 +4,14 @@ import SwiftUI
 struct TextToSpeechApp: App {
     @StateObject private var themeManager = ThemeManager()
     @StateObject private var shortcutManager = ShortcutManager()
+    @StateObject private var updateChecker = UpdateChecker()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(themeManager)
                 .environmentObject(shortcutManager)
+                .environmentObject(updateChecker)
                 .preferredColorScheme(themeManager.preferredColorScheme)
                 .frame(minWidth: 600, minHeight: 500)
         }
@@ -37,6 +39,7 @@ struct TextToSpeechApp: App {
         Settings {
             SettingsView()
                 .environmentObject(themeManager)
+                .environmentObject(updateChecker)
                 .preferredColorScheme(themeManager.preferredColorScheme)
         }
     }

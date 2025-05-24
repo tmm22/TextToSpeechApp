@@ -17,6 +17,7 @@
 		8D11073E0486CEB800E47098 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11073D0486CEB800E47098 /* ThemeManager.swift */; };
 		8D11073F0486CEB800E47099 /* EmotionTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11073E0486CEB800E47099 /* EmotionTester.swift */; };
 		8D1107400486CEB800E4709A /* ShortcutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11073F0486CEB800E4709A /* ShortcutManager.swift */; };
+		8D1107410486CEB800E4709B /* UpdateChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1107400486CEB800E4709B /* UpdateChecker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		8D11073D0486CEB800E47098 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		8D11073E0486CEB800E47099 /* EmotionTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionTester.swift; sourceTree = "<group>"; };
 		8D11073F0486CEB800E4709A /* ShortcutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutManager.swift; sourceTree = "<group>"; };
+		8D1107400486CEB800E4709B /* UpdateChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateChecker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				8D11073D0486CEB800E47098 /* ThemeManager.swift */,
 				8D11073E0486CEB800E47099 /* EmotionTester.swift */,
 				8D11073F0486CEB800E4709A /* ShortcutManager.swift */,
+				8D1107400486CEB800E4709B /* UpdateChecker.swift */,
 				8D11073C0486CEB800E47096 /* TextToSpeechApp.entitlements */,
 			);
 			path = TextToSpeechApp;
@@ -159,6 +162,7 @@
 				8D11073E0486CEB800E47098 /* ThemeManager.swift in Sources */,
 				8D11073F0486CEB800E47099 /* EmotionTester.swift in Sources */,
 				8D1107400486CEB800E4709A /* ShortcutManager.swift in Sources */,
+				8D1107410486CEB800E4709B /* UpdateChecker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,7 +188,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.TextToSpeechApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -211,7 +215,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.TextToSpeechApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

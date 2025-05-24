@@ -5,6 +5,33 @@ All notable changes to TextToSpeechApp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-01-24
+
+### 🚀 Enhanced Performance & Voice Selection
+
+This release focuses on improving user experience with enhanced voice selection, better performance for long text passages, and important bug fixes.
+
+### ✨ Added
+- **Enhanced Voice Selection Interface**: Streamlined voice selection with better organization and visual feedback
+- **Long Text Performance**: Optimized processing for extensive text content with improved memory efficiency
+- **Additional Language Support**: Expanded language options for text-to-speech processing
+- **Language-Aware Emotions**: Enhanced emotion support across different languages
+- **Voice Preview Capabilities**: Better voice discovery and preview functionality
+
+### 🔧 Fixed
+- **Pause/Resume Functionality**: Resolved critical issues with audio playback pause and resume controls
+- **Audio Continuity**: Fixed audio interruption problems during playback control operations
+- **Playback State Management**: Improved reliability of audio player state handling
+- **Long Text Processing**: Enhanced performance and stability when processing large text blocks
+- **Voice Loading**: Faster and more reliable voice loading and selection
+
+### ⚡ Improved
+- **Processing Speed**: Faster text-to-speech generation for large documents
+- **Memory Usage**: Reduced memory footprint when handling extensive text content
+- **UI Responsiveness**: Better handling of large text blocks without interface freezing
+- **Voice Selection UX**: Clearer indication of selected voices and loading states
+- **Multilingual Support**: Better handling of multilingual text content
+
 ## [2.0.0] - 2025-01-24
 
 ### 🚀 Major UI Revolution - Complete Interface Redesign
@@ -114,6 +141,7 @@ This release represents a complete reimagining of the TextToSpeechApp with a foc
 ## Links
 
 - [GitHub Repository](https://github.com/tmm22/TextToSpeechApp)
+- [Release Notes v2.1.0](RELEASE_NOTES_v2.1.0.md)
 - [Release Notes v2.0.0](RELEASE_NOTES_v2.0.0.md)
 - [Release Notes v1.0.0](RELEASE_NOTES_v1.0.0.md)
 - [Contributing Guidelines](GITHUB_RELEASE_GUIDE.md)

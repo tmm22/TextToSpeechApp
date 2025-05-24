@@ -8,6 +8,7 @@ struct ContentView: View {
     @State private var ttsService: TTSService?
     @EnvironmentObject var themeManager: ThemeManager
     @EnvironmentObject var shortcutManager: ShortcutManager
+    @EnvironmentObject var updateChecker: UpdateChecker
     
     @State private var inputText = ""
     @State private var selectedProvider: TTSProvider = .openAI
@@ -30,6 +31,11 @@ struct ContentView: View {
                 VStack(spacing: 0) {
                     // Minimal Header with floating controls
                     headerView
+                    
+                    // Update notification banner
+                    if updateChecker.shouldShowUpdateNotification {
+                        updateNotificationBanner
+                    }
                     
                     // Main content area
                     mainContentView
@@ -120,6 +126,11 @@ struct ContentView: View {
             
             quickActionButton("Settings", systemImage: "gear") {
                 showingSettings = true
+                showingQuickActions = false
+            }
+            
+            quickActionButton("Check for Updates", systemImage: "arrow.down.circle") {
+                updateChecker.checkForUpdates()
                 showingQuickActions = false
             }
             
@@ -586,6 +597,60 @@ struct ContentView: View {
                 if !self.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     self.generateSpeech()
                 }
+            }
+        }
+    }
+    
+    // MARK: - Update Notification Banner
+    private var updateNotificationBanner: some View {
+        Group {
+            if case .updateAvailable(let release) = updateChecker.updateStatus {
+                VStack(spacing: 12) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "arrow.down.circle.fill")
+                            .font(.title2)
+                            .foregroundColor(.blue)
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Update Available")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(.primary)
+                            
+                            Text("Version \(release.tagName) is now available")
+                                .font(.system(size: 14))
+                                .foregroundColor(.primary.opacity(0.8))
+                        }
+                        
+                        Spacer()
+                        
+                        Button("View Release") {
+                            updateChecker.openReleaseURL(release)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.small)
+                        
+                        Button(action: {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                updateChecker.updateStatus = .upToDate
+                            }
+                        }) {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(.primary.opacity(0.6))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
+                .background(.blue.opacity(0.1), in: RoundedRectangle(cornerRadius: 12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(.blue.opacity(0.3), lineWidth: 1)
+                )
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
     }

@@ -49,7 +49,8 @@ class TTSService: ObservableObject {
                 receiveCompletion: { [weak self] completion in
                     self?.isLoading = false
                     if case .failure(let error) = completion {
-                        self?.errorMessage = "Failed to load ElevenLabs voices: \(error.localizedDescription)"
+                        let errorMsg = self?.getNetworkErrorMessage(error) ?? "Unknown error"
+                        self?.errorMessage = "Failed to load ElevenLabs voices: \(errorMsg)"
                     }
                 },
                 receiveValue: { [weak self] response in
@@ -133,6 +134,26 @@ class TTSService: ObservableObject {
             .map(\.data)
             .mapError { $0 as Error }
             .eraseToAnyPublisher()
+    }
+    
+    private func getNetworkErrorMessage(_ error: Error) -> String {
+        if let urlError = error as? URLError {
+            switch urlError.code {
+            case .notConnectedToInternet:
+                return "No internet connection"
+            case .cannotFindHost:
+                return "Cannot connect to server. Check your network connection and ensure the app has network permissions."
+            case .timedOut:
+                return "Request timed out"
+            case .cannotConnectToHost:
+                return "Cannot connect to host"
+            case .networkConnectionLost:
+                return "Network connection lost"
+            default:
+                return "Network error: \(urlError.localizedDescription)"
+            }
+        }
+        return error.localizedDescription
     }
 }
 

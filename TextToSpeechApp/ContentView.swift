@@ -30,6 +30,20 @@ struct ContentView: View {
                 Spacer()
                 
                 HStack {
+                    Button(action: {
+                        if let url = URL(string: "https://github.com/tmm22/TextToSpeechApp") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "heart.fill")
+                            Text("Contribute on GitHub")
+                        }
+                    }
+                    .buttonStyle(.borderless)
+                    .foregroundColor(.blue)
+                    .help("Contribute to this project on GitHub")
+                    
                     Button("Voice Controls") {
                         showingVoiceControls = true
                     }

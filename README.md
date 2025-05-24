@@ -39,12 +39,19 @@ Support for 8 different emotional voice styles:
 - **Voice Selection**: Browse and select from available voices
 - **Settings Management**: Secure API key storage
 - **Reset to Defaults**: Quick reset for all voice controls
+- **GitHub Integration**: One-click access to contribute to the project
+
+### 🤝 Community Features
+- **Contribute on GitHub**: Prominent button in the main interface for easy access to the project repository
+- **Open Source**: Full source code available for community contributions and improvements
 
 ## Installation
 
-1. Clone this repository
+1. Clone this repository: `git clone https://github.com/tmm22/TextToSpeechApp.git`
 2. Open `TextToSpeechApp.xcodeproj` in Xcode
 3. Build and run the application
+
+You can also click the "Contribute on GitHub" button in the app to visit the repository directly.
 
 ## Setup
 

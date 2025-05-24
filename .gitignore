@@ -91,3 +91,11 @@ iOSInjectionProject/
 
 # macOS
 .DS_Store
+
+# Release builds
+release/
+*.zip
+*.dmg
+
+# Temporary release notes
+RELEASE_NOTES_*.md

@@ -26,27 +26,38 @@ struct ContentView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 0) {
-                // Minimal Header with floating controls
-                headerView
-                
-                // Main content area
-                mainContentView
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                
-                // Floating bottom controls
-                if audioPlayer.duration > 0 || isGenerating {
-                    bottomControlsView
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
+            ScrollView {
+                VStack(spacing: 0) {
+                    // Minimal Header with floating controls
+                    headerView
+                    
+                    // Main content area
+                    mainContentView
+                        .frame(minHeight: max(400, geometry.size.height - 200))
+                    
+                    // Floating bottom controls
+                    if audioPlayer.duration > 0 || isGenerating {
+                        bottomControlsView
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                    }
                 }
             }
         }
+        .frame(minWidth: 600, minHeight: 500)
         .background(backgroundGradient)
         .preferredColorScheme(themeManager.preferredColorScheme)
         .onAppear {
             setupTTSService()
             updateAvailableVoices()
             setupShortcutObservers()
+        }
+        .onChange(of: selectedProvider) { _ in
+            updateAvailableVoices()
+        }
+        .onChange(of: apiKeyManager.elevenLabsKey) { _ in
+            if selectedProvider == .elevenLabs {
+                updateAvailableVoices()
+            }
         }
         .sheet(isPresented: $showingSettings) {
             SettingsView()
@@ -244,7 +255,7 @@ struct ContentView: View {
                 .scrollContentBackground(.hidden)
                 .padding(16)
                 .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
-                .frame(minHeight: 120, maxHeight: 200)
+                .frame(minHeight: 120, idealHeight: 150, maxHeight: 250)
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
                         .stroke(.primary.opacity(0.1), lineWidth: 1)
@@ -433,6 +444,7 @@ struct ContentView: View {
     private func updateAvailableVoices() {
         guard let service = ttsService else { return }
         
+        
         let openAIVoices = OpenAIVoice.allCases.map { voice in
             Voice(id: voice.rawValue, name: voice.displayName, provider: .openAI)
         }
@@ -446,9 +458,37 @@ struct ContentView: View {
             
         case .elevenLabs:
             if apiKeyManager.hasElevenLabsKey {
+                // Clear any existing ElevenLabs voice observers
+                cancellables.removeAll()
+                
+                // Load ElevenLabs voices and observe the service for updates
                 service.loadElevenLabsVoices()
-                availableVoices = service.availableVoices.filter { $0.provider == .elevenLabs }
-                selectedVoice = availableVoices.first
+                
+                // Set up observer for when ElevenLabs voices are loaded
+                service.$availableVoices
+                    .receive(on: DispatchQueue.main)
+                    .sink { voices in
+                        let elevenLabsVoices = voices.filter { $0.provider == .elevenLabs }
+                        if !elevenLabsVoices.isEmpty && selectedProvider == .elevenLabs {
+                            availableVoices = elevenLabsVoices
+                            if selectedVoice?.provider != .elevenLabs {
+                                selectedVoice = elevenLabsVoices.first
+                            }
+                        }
+                    }
+                    .store(in: &cancellables)
+                
+                // Immediately show any existing ElevenLabs voices
+                let existingElevenLabsVoices = service.availableVoices.filter { $0.provider == .elevenLabs }
+                if !existingElevenLabsVoices.isEmpty {
+                    availableVoices = existingElevenLabsVoices
+                    if selectedVoice?.provider != .elevenLabs {
+                        selectedVoice = existingElevenLabsVoices.first
+                    }
+                } else {
+                    availableVoices = []
+                    selectedVoice = nil
+                }
             } else {
                 availableVoices = []
                 selectedVoice = nil

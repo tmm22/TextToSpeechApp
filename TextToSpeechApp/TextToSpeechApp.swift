@@ -11,9 +11,10 @@ struct TextToSpeechApp: App {
                 .environmentObject(themeManager)
                 .environmentObject(shortcutManager)
                 .preferredColorScheme(themeManager.preferredColorScheme)
+                .frame(minWidth: 600, minHeight: 500)
         }
         .windowStyle(DefaultWindowStyle())
-        .windowResizability(.contentSize)
+        .windowResizability(.contentMinSize)
         .commands {
             CommandGroup(after: .newItem) {
                 Button("Copy Text from Clipboard and Speak") {

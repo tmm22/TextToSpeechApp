@@ -40,6 +40,7 @@ Support for 8 different emotional voice styles:
 - **Settings Management**: Secure API key storage
 - **Reset to Defaults**: Quick reset for all voice controls
 - **GitHub Integration**: One-click access to contribute to the project
+- **Dark Mode Support**: Full dark mode interface with theme selection options (light, dark, system) - dark mode is the default theme
 
 ### 🤝 Community Features
 - **Contribute on GitHub**: Prominent button in the main interface for easy access to the project repository

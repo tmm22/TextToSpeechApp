@@ -75,7 +75,7 @@ class TTSService: ObservableObject {
         }
     }
     
-    private func synthesizeElevenLabs(text: String, voiceId: String, controls: VoiceControls = VoiceControls()) -> AnyPublisher<Data, Error> {
+    private func synthesizeElevenLabs(text: String, voiceId: String, controls: VoiceControls) -> AnyPublisher<Data, Error> {
         guard let url = URL(string: "https://api.elevenlabs.io/v1/text-to-speech/\(voiceId)") else {
             return Fail(error: TTSError.invalidURL).eraseToAnyPublisher()
         }
@@ -108,7 +108,7 @@ class TTSService: ObservableObject {
             .eraseToAnyPublisher()
     }
     
-    private func synthesizeOpenAI(text: String, voice: String, controls: VoiceControls = VoiceControls()) -> AnyPublisher<Data, Error> {
+    private func synthesizeOpenAI(text: String, voice: String, controls: VoiceControls) -> AnyPublisher<Data, Error> {
         guard let url = URL(string: "https://api.openai.com/v1/audio/speech") else {
             return Fail(error: TTSError.invalidURL).eraseToAnyPublisher()
         }

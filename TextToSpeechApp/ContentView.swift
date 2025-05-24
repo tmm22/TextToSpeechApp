@@ -7,6 +7,7 @@ struct ContentView: View {
     @StateObject private var audioPlayer = AudioPlayer()
     @State private var ttsService: TTSService?
     @EnvironmentObject var themeManager: ThemeManager
+    @EnvironmentObject var shortcutManager: ShortcutManager
     
     @State private var inputText = ""
     @State private var selectedProvider: TTSProvider = .openAI
@@ -18,6 +19,7 @@ struct ContentView: View {
     @State private var errorMessage: String?
     @State private var showingSettings = false
     @State private var showingVoiceControls = false
+    @State private var showingEmotionTester = false
     
     @State private var cancellables = Set<AnyCancellable>()
     
@@ -50,6 +52,12 @@ struct ContentView: View {
                         showingVoiceControls = true
                     }
                     .buttonStyle(.borderless)
+                    
+                    Button("Emotion Tester") {
+                        showingEmotionTester = true
+                    }
+                    .buttonStyle(.borderless)
+                    .help("Test all voice emotions automatically")
                     
                     Button("Settings") {
                         showingSettings = true
@@ -213,6 +221,7 @@ struct ContentView: View {
         .onAppear {
             setupTTSService()
             updateAvailableVoices()
+            setupShortcutObservers()
         }
         .sheet(isPresented: $showingSettings) {
             SettingsView()
@@ -225,6 +234,12 @@ struct ContentView: View {
                 provider: selectedProvider
             )
             .environmentObject(themeManager)
+        }
+        .sheet(isPresented: $showingEmotionTester) {
+            if let service = ttsService {
+                EmotionTesterView(ttsService: service, apiKeyManager: apiKeyManager)
+                    .environmentObject(themeManager)
+            }
         }
     }
     
@@ -303,6 +318,66 @@ struct ContentView: View {
         let minutes = Int(seconds) / 60
         let remainingSeconds = Int(seconds) % 60
         return String(format: "%d:%02d", minutes, remainingSeconds)
+    }
+    
+    private func setupShortcutObservers() {
+        // Observe shortcut manager changes
+        shortcutManager.$shouldCopyFromClipboard
+            .sink { shouldCopy in
+                if shouldCopy {
+                    self.handleCopyFromClipboard()
+                    DispatchQueue.main.async {
+                        self.shortcutManager.shouldCopyFromClipboard = false
+                    }
+                }
+            }
+            .store(in: &cancellables)
+        
+        shortcutManager.$shouldSpeakCurrentText
+            .sink { shouldSpeak in
+                if shouldSpeak {
+                    self.handleSpeakCurrentText()
+                    DispatchQueue.main.async {
+                        self.shortcutManager.shouldSpeakCurrentText = false
+                    }
+                }
+            }
+            .store(in: &cancellables)
+        
+        shortcutManager.$shouldCopyAndSpeak
+            .sink { shouldCopyAndSpeak in
+                if shouldCopyAndSpeak {
+                    self.handleCopyAndSpeak()
+                    DispatchQueue.main.async {
+                        self.shortcutManager.shouldCopyAndSpeak = false
+                    }
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func handleCopyFromClipboard() {
+        if let clipboardText = shortcutManager.getClipboardText() {
+            inputText = clipboardText
+        }
+    }
+    
+    private func handleSpeakCurrentText() {
+        if !inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            generateSpeech()
+        }
+    }
+    
+    private func handleCopyAndSpeak() {
+        if let clipboardText = shortcutManager.getClipboardText() {
+            inputText = clipboardText
+            // Small delay to ensure the text is set before generating speech
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if !self.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    self.generateSpeech()
+                }
+            }
+        }
     }
 }
 

@@ -15,6 +15,8 @@
 		8D11073B0486CEB800E47095 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11073A0486CEB800E47095 /* SettingsView.swift */; };
 		8D11073D0486CEB800E47097 /* VoiceControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11073C0486CEB800E47097 /* VoiceControlsView.swift */; };
 		8D11073E0486CEB800E47098 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11073D0486CEB800E47098 /* ThemeManager.swift */; };
+		8D11073F0486CEB800E47099 /* EmotionTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11073E0486CEB800E47099 /* EmotionTester.swift */; };
+		8D1107400486CEB800E4709A /* ShortcutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D11073F0486CEB800E4709A /* ShortcutManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		8D11073C0486CEB800E47096 /* TextToSpeechApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TextToSpeechApp.entitlements; sourceTree = "<group>"; };
 		8D11073C0486CEB800E47097 /* VoiceControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceControlsView.swift; sourceTree = "<group>"; };
 		8D11073D0486CEB800E47098 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		8D11073E0486CEB800E47099 /* EmotionTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionTester.swift; sourceTree = "<group>"; };
+		8D11073F0486CEB800E4709A /* ShortcutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +64,8 @@
 				8D11073A0486CEB800E47095 /* SettingsView.swift */,
 				8D11073C0486CEB800E47097 /* VoiceControlsView.swift */,
 				8D11073D0486CEB800E47098 /* ThemeManager.swift */,
+				8D11073E0486CEB800E47099 /* EmotionTester.swift */,
+				8D11073F0486CEB800E4709A /* ShortcutManager.swift */,
 				8D11073C0486CEB800E47096 /* TextToSpeechApp.entitlements */,
 			);
 			path = TextToSpeechApp;
@@ -151,6 +157,8 @@
 				8D11073B0486CEB800E47095 /* SettingsView.swift in Sources */,
 				8D11073D0486CEB800E47097 /* VoiceControlsView.swift in Sources */,
 				8D11073E0486CEB800E47098 /* ThemeManager.swift in Sources */,
+				8D11073F0486CEB800E47099 /* EmotionTester.swift in Sources */,
+				8D1107400486CEB800E4709A /* ShortcutManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

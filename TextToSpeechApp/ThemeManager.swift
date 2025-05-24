@@ -37,11 +37,33 @@ class ThemeManager: ObservableObject {
     }
     
     init() {
-        let savedTheme = UserDefaults.standard.string(forKey: "selectedTheme") ?? AppTheme.system.rawValue
-        self.currentTheme = AppTheme(rawValue: savedTheme) ?? .system
+        // Ensure dark mode is the default theme
+        // Check if there's a saved theme preference, but default to dark mode
+        let savedTheme = UserDefaults.standard.string(forKey: "selectedTheme")
+        
+        if let savedTheme = savedTheme, let theme = AppTheme(rawValue: savedTheme) {
+            // Use saved theme if it exists and is valid
+            self.currentTheme = theme
+        } else {
+            // Default to dark mode if no saved preference or invalid preference
+            self.currentTheme = .dark
+            UserDefaults.standard.set(AppTheme.dark.rawValue, forKey: "selectedTheme")
+        }
     }
     
     var preferredColorScheme: ColorScheme? {
         return currentTheme.colorScheme
+    }
+    
+    // Method to reset theme to dark mode (useful for ensuring dark mode is default)
+    func resetToDefaultDarkMode() {
+        print("Resetting theme to dark mode")
+        UserDefaults.standard.set(AppTheme.dark.rawValue, forKey: "selectedTheme")
+        self.currentTheme = .dark
+    }
+    
+    // Method to check if this is the first launch (no theme preference saved)
+    var isFirstLaunch: Bool {
+        return UserDefaults.standard.string(forKey: "selectedTheme") == nil
     }
 }

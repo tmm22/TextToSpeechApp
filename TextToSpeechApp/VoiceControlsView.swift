@@ -4,6 +4,7 @@ struct VoiceControlsView: View {
     @Binding var controls: VoiceControls
     @ObservedObject var audioPlayer: AudioPlayer
     let provider: TTSProvider
+    @EnvironmentObject var themeManager: ThemeManager
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -147,8 +148,10 @@ struct VoiceControlsView: View {
                         .buttonStyle(.bordered)
                         .controlSize(.small)
                         .background(
-                            controls.emotion == emotion ? 
-                            Color.accentColor.opacity(0.2) : Color.clear
+                            controls.emotion == emotion ?
+                            (themeManager.currentTheme == .dark ?
+                             Color.accentColor.opacity(0.3) : Color.accentColor.opacity(0.2)) :
+                            Color.clear
                         )
                         .cornerRadius(8)
                     }
@@ -180,7 +183,7 @@ struct VoiceControlsView: View {
             }
         }
         .padding(16)
-        .background(Color(NSColor.controlBackgroundColor))
+        .background(themeManager.currentTheme == .dark ? Color(.darkGray).opacity(0.2) : Color(NSColor.controlBackgroundColor))
         .cornerRadius(12)
     }
     
@@ -200,5 +203,6 @@ struct VoiceControlsView: View {
         audioPlayer: AudioPlayer(),
         provider: .openAI
     )
+    .environmentObject(ThemeManager())
     .frame(width: 400)
 }

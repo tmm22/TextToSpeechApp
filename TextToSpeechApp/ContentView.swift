@@ -6,6 +6,7 @@ struct ContentView: View {
     @StateObject private var apiKeyManager = APIKeyManager()
     @StateObject private var audioPlayer = AudioPlayer()
     @State private var ttsService: TTSService?
+    @EnvironmentObject var themeManager: ThemeManager
     
     @State private var inputText = ""
     @State private var selectedProvider: TTSProvider = .openAI
@@ -123,9 +124,10 @@ struct ContentView: View {
                     .frame(minHeight: 120)
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                            .stroke(themeManager.currentTheme == .dark ? Color.gray.opacity(0.5) : Color.gray.opacity(0.3), lineWidth: 1)
                     )
                     .cornerRadius(8)
+                    .background(themeManager.currentTheme == .dark ? Color(.darkGray).opacity(0.3) : Color(.white))
             }
             
             // Controls
@@ -198,7 +200,7 @@ struct ContentView: View {
                         .foregroundColor(.red)
                 }
                 .padding(8)
-                .background(Color.red.opacity(0.1))
+                .background(themeManager.currentTheme == .dark ? Color.red.opacity(0.2) : Color.red.opacity(0.1))
                 .cornerRadius(8)
             }
             
@@ -206,12 +208,15 @@ struct ContentView: View {
         }
         .padding(20)
         .frame(minWidth: 500, minHeight: 600)
+        .background(themeManager.currentTheme == .dark ? Color(.darkGray).opacity(0.2) : Color(.white))
+        .foregroundColor(themeManager.currentTheme == .dark ? .white : .primary)
         .onAppear {
             setupTTSService()
             updateAvailableVoices()
         }
         .sheet(isPresented: $showingSettings) {
             SettingsView()
+                .environmentObject(themeManager)
         }
         .sheet(isPresented: $showingVoiceControls) {
             VoiceControlsView(
@@ -219,6 +224,7 @@ struct ContentView: View {
                 audioPlayer: audioPlayer,
                 provider: selectedProvider
             )
+            .environmentObject(themeManager)
         }
     }
     

@@ -2,14 +2,37 @@ import SwiftUI
 
 struct SettingsView: View {
     @StateObject private var apiKeyManager = APIKeyManager()
+    @EnvironmentObject var themeManager: ThemeManager
     @State private var showingElevenLabsKey = false
     @State private var showingOpenAIKey = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            Text("API Configuration")
+            Text("Settings")
                 .font(.title2)
                 .fontWeight(.bold)
+            
+            // Theme Selection
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Appearance")
+                    .font(.headline)
+                
+                Picker("Theme", selection: $themeManager.currentTheme) {
+                    ForEach(AppTheme.allCases, id: \.self) { theme in
+                        Text(theme.displayName).tag(theme)
+                    }
+                }
+                .pickerStyle(.segmented)
+                
+                Text("Choose your preferred appearance theme")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            Divider()
+            
+            Text("API Configuration")
+                .font(.headline)
             
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
@@ -98,7 +121,7 @@ struct SettingsView: View {
             Spacer()
         }
         .padding(20)
-        .frame(width: 500, height: 400)
+        .frame(width: 550, height: 450)
     }
 }
 

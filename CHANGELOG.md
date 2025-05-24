@@ -5,7 +5,7 @@ All notable changes to the TextToSpeechApp project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - 2025-01-24
+## [1.1.0] - 2025-05-24
 
 ### Fixed
 - **Build Issues**: Added missing AppKit import for NSWorkspace functionality
@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Fixes build failures on clean environments
 
 ### Added
+- **Dark Mode Support**: Added comprehensive dark mode theming throughout the application
+  - Theme selection in Settings (Light, Dark, System)
+  - Improved UI contrast and readability in dark environments
+  - Theme preference is saved between app launches
+  - Consistent styling across all app views
+
 - **Contribute on GitHub Button**: Added a prominent "Contribute on GitHub" button in the main interface header
   - Clickable heart icon with "Contribute on GitHub" text
   - Opens the project's GitHub repository in the default browser
@@ -23,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhanced
 - **User Interface**: Improved header layout with better organization of action buttons
 - **Community Engagement**: Made it easier for users to find and contribute to the project
+- **Accessibility**: Enhanced text contrast and readability in both light and dark modes
 
 ## [1.0.0] - 2025-01-24
 
@@ -79,8 +86,9 @@ TextToSpeechApp/
 ├── VoiceControlsView.swift        # Advanced voice controls panel
 ├── VoiceProvider.swift            # TTS provider models and voice controls
 ├── TTSService.swift               # TTS API integration service
-├── AudioPlayer.swift             # Audio playback with advanced controls
+├── AudioPlayer.swift              # Audio playback with advanced controls
 ├── SettingsView.swift             # API key configuration interface
+├── ThemeManager.swift             # Dark mode and theme management
 └── TextToSpeechApp.entitlements   # App permissions and capabilities
 ```
 

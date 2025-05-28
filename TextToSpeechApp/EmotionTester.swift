@@ -55,6 +55,11 @@ class EmotionTester: ObservableObject {
                 errorMessage = "OpenAI API key is required for testing"
                 return false
             }
+        case .google:
+            if !apiKeyManager.hasGoogleKey {
+                errorMessage = "Google API key is required for testing"
+                return false
+            }
         }
         return true
     }
@@ -418,6 +423,8 @@ struct EmotionTesterView: View {
             return apiKeyManager.hasElevenLabsKey
         case .openAI:
             return apiKeyManager.hasOpenAIKey
+        case .google:
+            return apiKeyManager.hasGoogleKey
         }
     }
     
@@ -438,6 +445,12 @@ struct EmotionTesterView: View {
                 availableVoices = []
                 selectedVoice = nil
             }
+            
+        case .google:
+            availableVoices = GoogleVoice.allCases.map { voice in
+                Voice(id: voice.fullName, name: voice.displayName, provider: .google)
+            }
+            selectedVoice = availableVoices.first
         }
     }
 }

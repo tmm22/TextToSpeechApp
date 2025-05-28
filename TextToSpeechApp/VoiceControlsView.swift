@@ -232,6 +232,8 @@ struct VoiceControlsView: View {
             return 0.25...4.0
         case .elevenLabs:
             return 0.5...2.0
+        case .google:
+            return 0.25...4.0  // Google supports similar speed range as OpenAI
         }
     }
 }

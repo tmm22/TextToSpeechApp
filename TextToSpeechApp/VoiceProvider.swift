@@ -3,6 +3,7 @@ import Foundation
 enum TTSProvider: String, CaseIterable {
     case elevenLabs = "ElevenLabs"
     case openAI = "OpenAI"
+    case google = "Google"
     
     var displayName: String {
         return rawValue
@@ -41,6 +42,55 @@ enum OpenAIVoice: String, CaseIterable {
     
     var displayName: String {
         return rawValue.capitalized
+    }
+}
+
+// Google TTS Voice Models
+enum GoogleVoice: String, CaseIterable {
+    case aoede = "Aoede"
+    case charon = "Charon"
+    case fenrir = "Fenrir"
+    case puck = "Puck"
+    
+    var displayName: String {
+        return rawValue
+    }
+    
+    var fullName: String {
+        return "en-US-Casual-K-\(rawValue)"
+    }
+}
+
+// Google TTS Response Models
+struct GoogleTTSResponse: Codable {
+    let audioContent: String
+}
+
+struct GoogleTTSRequest: Codable {
+    let input: GoogleTTSInput
+    let voice: GoogleTTSVoice
+    let audioConfig: GoogleTTSAudioConfig
+}
+
+struct GoogleTTSInput: Codable {
+    let text: String
+}
+
+struct GoogleTTSVoice: Codable {
+    let name: String
+}
+
+struct GoogleTTSAudioConfig: Codable {
+    let audioEncoding: String
+    let speakingRate: Double?
+    let pitch: Double?
+    let volumeGainDb: Double?
+    
+    enum CodingKeys: String, CodingKey {
+        case audioEncoding
+        case speakingRate
+        case pitch
+        case volumeGainDb
     }
 }
 
@@ -112,9 +162,16 @@ class APIKeyManager: ObservableObject {
         }
     }
     
+    @Published var googleKey: String {
+        didSet {
+            UserDefaults.standard.set(googleKey, forKey: "googleAPIKey")
+        }
+    }
+    
     init() {
         self.elevenLabsKey = UserDefaults.standard.string(forKey: "elevenLabsAPIKey") ?? ""
         self.openAIKey = UserDefaults.standard.string(forKey: "openAIAPIKey") ?? ""
+        self.googleKey = UserDefaults.standard.string(forKey: "googleAPIKey") ?? ""
     }
     
     var hasElevenLabsKey: Bool {
@@ -123,5 +180,9 @@ class APIKeyManager: ObservableObject {
     
     var hasOpenAIKey: Bool {
         !openAIKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
+    var hasGoogleKey: Bool {
+        !googleKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }

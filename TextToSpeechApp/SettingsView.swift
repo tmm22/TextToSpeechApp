@@ -6,6 +6,7 @@ struct SettingsView: View {
     @EnvironmentObject var updateChecker: UpdateChecker
     @State private var showingElevenLabsKey = false
     @State private var showingOpenAIKey = false
+    @State private var showingGoogleKey = false
     
     private var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -113,6 +114,41 @@ struct SettingsView: View {
                 
                 Divider()
                 
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Google API Key:")
+                            .fontWeight(.medium)
+                        Spacer()
+                        Button(showingGoogleKey ? "Hide" : "Show") {
+                            showingGoogleKey.toggle()
+                        }
+                        .buttonStyle(.borderless)
+                        .foregroundColor(.blue)
+                    }
+                    
+                    if showingGoogleKey {
+                        TextField("Enter Google API key", text: $apiKeyManager.googleKey)
+                            .textFieldStyle(.roundedBorder)
+                            .font(.system(.body, design: .monospaced))
+                    } else {
+                        SecureField("Enter Google API key", text: $apiKeyManager.googleKey)
+                            .textFieldStyle(.roundedBorder)
+                            .font(.system(.body, design: .monospaced))
+                    }
+                    
+                    if apiKeyManager.hasGoogleKey {
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                            Text("API key configured")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+                
+                Divider()
+                
                 // Update Settings
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Updates")
@@ -198,6 +234,7 @@ struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("• Get ElevenLabs API key from: elevenlabs.io")
                         Text("• Get OpenAI API key from: platform.openai.com")
+                        Text("• Get Google API key from: aistudio.google.com")
                         Text("• API keys are stored securely in your system keychain")
                         Text("• Restart the app after adding keys for full functionality")
                     }

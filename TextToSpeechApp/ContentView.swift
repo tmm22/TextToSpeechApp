@@ -65,6 +65,11 @@ struct ContentView: View {
                 updateAvailableVoices()
             }
         }
+        .onChange(of: apiKeyManager.googleKey) { _ in
+            if selectedProvider == .google {
+                updateAvailableVoices()
+            }
+        }
         .sheet(isPresented: $showingSettings) {
             SettingsView()
                 .environmentObject(themeManager)
@@ -444,6 +449,8 @@ struct ContentView: View {
             return apiKeyManager.hasElevenLabsKey
         case .openAI:
             return apiKeyManager.hasOpenAIKey
+        case .google:
+            return apiKeyManager.hasGoogleKey
         }
     }
     
@@ -503,6 +510,16 @@ struct ContentView: View {
             } else {
                 availableVoices = []
                 selectedVoice = nil
+            }
+            
+        case .google:
+            // Google voices are always available (no API key needed for voice list)
+            let googleVoices = GoogleVoice.allCases.map { voice in
+                Voice(id: voice.fullName, name: voice.displayName, provider: .google)
+            }
+            availableVoices = googleVoices
+            if selectedVoice == nil || selectedVoice?.provider != .google {
+                selectedVoice = googleVoices.first
             }
         }
     }

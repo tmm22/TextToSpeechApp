@@ -86,8 +86,8 @@ class UpdateChecker: ObservableObject {
     
     init() {
         // Get current version from bundle
-        let bundleVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "2.0.0"
-        self.currentVersion = AppVersion(from: bundleVersion) ?? AppVersion(from: "2.0.0")!
+        let bundleVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.2.0"
+        self.currentVersion = AppVersion(from: bundleVersion) ?? AppVersion(from: "1.2.0")!
         
         // Load user preference for automatic checks (default: true)
         self.automaticUpdateChecksEnabled = UserDefaults.standard.object(forKey: "automaticUpdateChecksEnabled") as? Bool ?? true
